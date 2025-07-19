@@ -1,78 +1,40 @@
+import { FaYoutube, FaSlack, FaGoogleDrive, FaQuestionCircle } from 'react-icons/fa';
+import { SiZoom } from 'react-icons/si';
+import { MdComputer } from 'react-icons/md';
 
 const EmissionSource = () => {
-    return (
-        <>
-        {/* Emissions by Source */ }
-        < div className = "bg-white rounded-lg shadow-sm border border-gray-200 p-6" >
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900">Emissions by Source</h3>
-                    <button className="text-sm text-emerald-600 hover:text-emerald-700 cursor-pointer">View All</button>
-                </div>
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                            <span className="text-sm text-gray-700">Transportation</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">2,340 tCO₂e</span>
-                            <span className="text-xs text-gray-500">25%</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                            <span className="text-sm text-gray-700">Energy</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">1,890 tCO₂e</span>
-                            <span className="text-xs text-gray-500">20%</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                            <span className="text-sm text-gray-700">Manufacturing</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">1,670 tCO₂e</span>
-                            <span className="text-xs text-gray-500">18%</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                            <span className="text-sm text-gray-700">Office Operations</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">1,120 tCO₂e</span>
-                            <span className="text-xs text-gray-500">12%</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span className="text-sm text-gray-700">Waste</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">890 tCO₂e</span>
-                            <span className="text-xs text-gray-500">9%</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
-                            <span className="text-sm text-gray-700">Other</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">1,490 tCO₂e</span>
-                            <span className="text-xs text-gray-500">16%</span>
-                        </div>
-                    </div>
-                </div>
-            </div >
-            </>
-  )
-}
+    const sources = [
+        { name: 'YouTube', icon: <FaYoutube className="text-red-500" />, value: '420 tCO₂e', percent: '28%' },
+        { name: 'Zoom', icon: <SiZoom className="text-blue-500" />, value: '300 tCO₂e', percent: '20%' },
+        { name: 'Slack', icon: <FaSlack className="text-purple-500" />, value: '220 tCO₂e', percent: '15%' },
+        { name: 'Google Drive', icon: <FaGoogleDrive className="text-yellow-500" />, value: '190 tCO₂e', percent: '13%' },
+        { name: 'Web Browsing', icon: <MdComputer className="text-emerald-500" />, value: '140 tCO₂e', percent: '10%' },
+        { name: 'Other', icon: <FaQuestionCircle className="text-gray-500" />, value: '180 tCO₂e', percent: '14%' },
+    ];
 
-export default EmissionSource
+    return (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 w-full">
+            <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Emissions by Source</h3>
+                <button className="text-sm text-emerald-600 hover:text-emerald-700">View All</button>
+            </div>
+
+            <div className="space-y-4">
+                {sources.map((src, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-6 h-6 flex items-center justify-center">{src.icon}</div>
+                            <span className="text-sm text-gray-700">{src.name}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <span className="text-sm font-medium text-gray-900">{src.value}</span>
+                            <span className="text-xs text-gray-500">{src.percent}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default EmissionSource;
