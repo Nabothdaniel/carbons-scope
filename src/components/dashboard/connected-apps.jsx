@@ -1,17 +1,41 @@
 import { useState } from 'react';
-import { FaGoogle, FaSlack, FaGithub, FaVideo, FaBolt, FaPlus, FaTimes } from 'react-icons/fa';
+import {
+  FaGoogle,
+  FaSlack,
+  FaGithub,
+  FaVideo,
+  FaBolt,
+  FaPlus,
+  FaTimes,
+} from 'react-icons/fa';
 import LeadBoards from './leadboards';
+
+const allServices = [
+  { name: 'Google Workspace', icon: <FaGoogle className="text-blue-600" /> },
+  { name: 'Zoom', icon: <FaVideo className="text-purple-600" /> },
+  { name: 'Slack', icon: <FaSlack className="text-indigo-600" /> },
+  { name: 'GitHub', icon: <FaGithub className="text-gray-700" /> },
+  { name: 'Smart Meter', icon: <FaBolt className="text-emerald-600" /> },
+];
 
 const ConnectedApps = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [connectedServices, setConnectedServices] = useState([
+    'Google Workspace', // Example default connected
+  ]);
 
-  const availableServices = [
-    { name: 'Google Workspace', icon: <FaGoogle className="text-blue-600" /> },
-    { name: 'Zoom', icon: <FaVideo className="text-purple-600" /> },
-    { name: 'Slack', icon: <FaSlack className="text-indigo-600" /> },
-    { name: 'GitHub', icon: <FaGithub className="text-gray-700" /> },
-    { name: 'Smart Meter', icon: <FaBolt className="text-emerald-600" /> },
-  ];
+  const handleConnect = (serviceName) => {
+    if (!connectedServices.includes(serviceName)) {
+      setConnectedServices([...connectedServices, serviceName]);
+      // TODO: Call backend API to store this user's connected services
+    }
+    setShowDropdown(false);
+  };
+
+  const handleDisconnect = (serviceName) => {
+    setConnectedServices(connectedServices.filter((name) => name !== serviceName));
+    // TODO: Call backend API to update user's connected services
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
@@ -27,9 +51,9 @@ const ConnectedApps = () => {
           </button>
         </div>
 
-        {/* Dropdown Card */}
+        {/* Dropdown */}
         {showDropdown && (
-          <div className="absolute top-20 right-6 w-72 bg-white border border-gray-200 shadow-lg rounded-xl z-50 p-4">
+          <div className="absolute top-20 right-6 w-72 bg-white border border-gray-200 shadow-lg rounded-xl z-50 p-4 transition duration-200 animate-fade-in-down">
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-sm font-semibold text-gray-800">Available Services</h4>
               <button
@@ -39,44 +63,54 @@ const ConnectedApps = () => {
                 <FaTimes />
               </button>
             </div>
-            <ul className="space-y-3">
-              {availableServices.map((service, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"
-                  onClick={() => {
-                    alert(`Connecting ${service.name}`);
-                    setShowDropdown(false);
-                  }}
-                >
-                  <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-lg">
-                    {service.icon}
-                  </div>
-                  <span className="text-sm text-gray-700">{service.name}</span>
-                </li>
-              ))}
+            <ul className="space-y-3 max-h-60 overflow-y-auto">
+              {allServices
+                .filter((service) => !connectedServices.includes(service.name))
+                .map((service, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition"
+                    onClick={() => handleConnect(service.name)}
+                  >
+                    <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-lg">
+                      {service.icon}
+                    </div>
+                    <span className="text-sm text-gray-700">{service.name}</span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}
 
-        {/* Connected Apps Grid */}
+        {/* Connected Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          {/* Example - Add your actual connected services here */}
-          <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <FaGoogle className="text-blue-600 text-xl" />
-            </div>
-            <div className="flex-1">
-              <h4 className="text-sm font-medium text-gray-900">Google Workspace</h4>
-              <p className="text-xs text-gray-500">Emails, Docs, and Drive activity</p>
-            </div>
-            <button className="text-xs text-red-600 hover:text-red-700">Disconnect</button>
-          </div>
-          {/* ...more connected cards */}
+          {connectedServices.map((serviceName) => {
+            const service = allServices.find((s) => s.name === serviceName);
+            return (
+              <div
+                key={serviceName}
+                className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+              >
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  {service?.icon}
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-medium text-gray-900">{serviceName}</h4>
+                  <p className="text-xs text-gray-500">Tracking enabled</p>
+                </div>
+                <button
+                  onClick={() => handleDisconnect(serviceName)}
+                  className="text-xs text-red-600 hover:text-red-700"
+                >
+                  Disconnect
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Right Side Widget */}
+      {/* Right side widget */}
       <LeadBoards />
     </div>
   );
